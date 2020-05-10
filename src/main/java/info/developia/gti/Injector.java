@@ -6,10 +6,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Injector {
 
-    public Map<String, Object> instances = new HashMap<>();
+    private final Map<String, Object> instances = new HashMap<>();
 
     public Injector() {
     }
@@ -47,5 +48,10 @@ public class Injector {
                 throw new InjectionException();
             }
         }
+    }
+
+    public Object getInstanceFor(String className) {
+        return Optional.ofNullable(instances.get(className))
+                .orElseThrow(InjectionException::new);
     }
 }

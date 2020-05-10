@@ -13,7 +13,7 @@ public class Launcher {
 
     public static void main(String[] args) {
         Injector injector = new Injector(Library.class);
-        Library library = (Library) injector.instances.get("info.developia.Library");
+        Library library = (Library) injector.getInstanceFor("info.developia.Library");
         library.process();
     }
 }
