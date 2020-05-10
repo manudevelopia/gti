@@ -11,6 +11,15 @@ public class Injector {
 
     public Map<String, Object> instances = new HashMap<>();
 
+    public Injector() {
+    }
+
+    public Injector(Class<?>... libraryClass) {
+        for (Class<?> clazz : libraryClass) {
+            add(clazz);
+        }
+    }
+
     public void add(Class<?> clazz) {
         processClass(clazz, Injection.class);
         processFields(clazz, Injection.class);
