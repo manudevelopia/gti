@@ -1,5 +1,6 @@
 package info.developia.gti;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -11,26 +12,30 @@ public class Injector {
     public Map<String, Object> instances = new HashMap<>();
 
     public void add(Class<?> clazz) {
-        if (clazz.isAnnotationPresent(Injection.class)) {
+        processClass(clazz, Injection.class);
+        processFields(clazz, Injection.class);
+    }
+
+    private void processFields(Class<?> clazz, Class<? extends Annotation> annotation) {
+        for (Field field : clazz.getDeclaredFields()) {
+            if (field.isAnnotationPresent(annotation)) {
+                Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
+                try {
+                    instances.put(clazz.getCanonicalName(), constructor.newInstance());
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                    throw new InjectionException();
+                }
+            }
+        }
+    }
+
+    private void processClass(Class<?> clazz, Class<? extends Annotation> annotation) {
+        if (clazz.isAnnotationPresent(annotation)) {
             Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
             try {
                 instances.put(clazz.getCanonicalName(), constructor.newInstance());
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                e.printStackTrace();
-            }
-        }
-
-        for (Field field : clazz.getDeclaredFields()) {
-            if (field.isAnnotationPresent(Injection.class)) {
-                Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-                try {
-                    instances.put(clazz.getCanonicalName(), constructor.newInstance());
-                    field.setAccessible(true);
-                    field.set(null, constructor.newInstance());
-                    field.setAccessible(false);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                throw new InjectionException();
             }
         }
     }
