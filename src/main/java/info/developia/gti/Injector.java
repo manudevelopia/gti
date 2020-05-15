@@ -12,9 +12,6 @@ public class Injector {
 
     private final Map<String, Object> instances = new HashMap<>();
 
-    public Injector() {
-    }
-
     public Injector(Class<?>... libraryClass) {
         for (Class<?> clazz : libraryClass) {
             add(clazz);
