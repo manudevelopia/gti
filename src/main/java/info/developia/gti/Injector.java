@@ -47,8 +47,8 @@ public class Injector {
         }
     }
 
-    public Object getInstanceFor(String className) {
-        return Optional.ofNullable(instances.get(className))
+    public Object getInstanceFor(Class<?> clazz) {
+        return Optional.ofNullable(instances.get(clazz.getName()))
                 .orElseThrow(InjectionException::new);
     }
 }
