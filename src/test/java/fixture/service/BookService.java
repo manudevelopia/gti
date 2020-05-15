@@ -1,8 +1,8 @@
-package info.developia.service;
+package fixture.service;
 
 import info.developia.gti.Injection;
-import info.developia.model.Book;
-import info.developia.repository.BookRepository;
+import fixture.model.Book;
+import fixture.repository.BookRepository;
 
 @Injection
 public class BookService {

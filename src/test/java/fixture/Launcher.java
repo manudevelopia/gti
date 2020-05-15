@@ -1,4 +1,4 @@
-package info.developia;
+package fixture;
 
 import info.developia.gti.Injector;
 

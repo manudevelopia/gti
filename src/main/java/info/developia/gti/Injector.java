@@ -40,7 +40,8 @@ public class Injector {
         if (clazz.isAnnotationPresent(annotation)) {
             Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
             try {
-                instances.put(clazz.getCanonicalName(), constructor.newInstance());
+                Object[] initArgs = new Object[0];
+                instances.put(clazz.getCanonicalName(), constructor.newInstance(initArgs));
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new InjectionException();
             }
