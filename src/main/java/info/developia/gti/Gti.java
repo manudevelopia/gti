@@ -2,20 +2,25 @@ package info.developia.gti;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Gti {
-    private List<String> packages;
+    private final List<String> packages;
+    private Set<Class<?>> injectables;
 
     public Gti(String... packages) {
-        this.packages = Arrays.asList(packages);
+        this.packages = packages.length == 0 ? List.of("") : Arrays.asList(packages);
     }
 
-    public Gti(Class<?> clazz){
-        packages.stream().map(Injectable::getInjectables).collect(Collectors.toList());
+    public void start() {
+        injectables = packages.stream()
+                .flatMap(packageName -> Injectable.getInjectables(packageName).stream())
+                .collect(Collectors.toSet());
+        Set<Class<?>> noParamConstructor = Injectable.getNoParamsConstructor(injectables);
     }
 
-    public void start(){
-        packages.stream().map(Injectable::getInjectables).collect(Collectors.toList());
+    public Set<Class<?>> getInjectables() {
+        return injectables;
     }
 }
