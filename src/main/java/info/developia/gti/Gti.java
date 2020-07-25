@@ -7,21 +7,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Gti {
-    private final List<String> packages;
-    private Set<Class<?>> injectables;
-    private final Injectable injectable;
-    private Map<String, Object> instances;
+    private final Set<Class<?>> injectables;
+    private final Map<String, Object> instances;
 
     public Gti(String... packages) {
-        this.packages = packages.length == 0 ? List.of("") : Arrays.asList(packages);
-        injectable = new Injectable();
+        injectables = getPackages(packages).stream()
+                .flatMap(packageName -> Injectable.getInjectables(packageName).stream())
+                .collect(Collectors.toSet());
+        instances = Injectable.initialize(injectables);
     }
 
-    public void start() {
-        injectables = packages.stream()
-                .flatMap(packageName -> injectable.getInjectables(packageName).stream())
-                .collect(Collectors.toSet());
-        instances = injectable.initialize(injectables);
+    private List<String> getPackages(String[] packages) {
+        return packages.length == 0 ? List.of("") : Arrays.asList(packages);
     }
 
     public Object getInstanceOf(Class<?> clazz) {

@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 
 public class Injectable {
 
-    public Set<Class<?>> getInjectables(String packageName) {
+    public static Set<Class<?>> getInjectables(String packageName) {
         Reflections reflections = new Reflections(packageName);
         return reflections.getTypesAnnotatedWith(Injection.class);
     }
 
-    public Map<String, Object> initialize(Set<Class<?>> injectables) {
+    public static Map<String, Object> initialize(Set<Class<?>> injectables) {
         Map<String, Object> instances = new HashMap<>();
         injectables.forEach(clazz -> {
             Object instance = getInstanceOf(clazz);
@@ -27,7 +27,7 @@ public class Injectable {
         return instances;
     }
 
-    private Object getInstanceOf(Class<?> clazz) {
+    private static Object getInstanceOf(Class<?> clazz) {
         Object[] args = getClassArgs(clazz);
         try {
             return getConstructor(clazz).newInstance(args);
@@ -37,13 +37,13 @@ public class Injectable {
         }
     }
 
-    private Constructor<?> getConstructor(Class<?> clazz) {
+    private static Constructor<?> getConstructor(Class<?> clazz) {
         // TODO: check  constructor
         return clazz.getConstructors()[0];
     }
 
-    private Object[] getClassArgs(Class<?> clazz) {
+    private static Object[] getClassArgs(Class<?> clazz) {
         Set<Class<?>> argumentClasses = Arrays.stream(clazz.getConstructors()[0].getParameters()).map(Parameter::getType).collect(Collectors.toSet());
-        return argumentClasses.stream().map(this::getInstanceOf).toArray();
+        return argumentClasses.stream().map(Injectable::getInstanceOf).toArray();
     }
 }
