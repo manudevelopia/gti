@@ -21,6 +21,9 @@ public class Injectable {
     public static Map<String, Object> initialize(Set<Class<?>> injectables) {
         Map<String, Object> instances = new HashMap<>();
         injectables.forEach(clazz -> {
+            if (instances.containsKey(clazz.getCanonicalName())) {
+                return;
+            }
             Object instance = getInstanceOf(clazz);
             instances.put(instance.getClass().getCanonicalName(), instance);
         });

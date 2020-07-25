@@ -6,16 +6,11 @@ import info.developia.gti.Injection;
 
 @Injection
 public class Library {
-
     private final BookService bookService;
 
-    public Library() {
-        this.bookService = new BookService();
+    public Library(BookService bookService) {
+        this.bookService = bookService;
     }
-
-    //    public Library(BookService bookService) {
-//        this.bookService = bookService;
-//    }
 
     public void process() {
         Book book = new Book();
