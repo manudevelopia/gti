@@ -13,9 +13,9 @@ public class BookService {
         this.bookRepository = new BookRepository();
     }
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+//    public BookService(BookRepository bookRepository) {
+//        this.bookRepository = bookRepository;
+//    }
 
     public void add(Book book) {
         bookRepository.add(book);
