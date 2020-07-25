@@ -1,55 +1,31 @@
 package info.developia.gti;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Injector {
+    private final Map<String, Object> instances;
 
-    private final Map<String, Object> instances = new HashMap<>();
-
-    public Injector(Class<?>... libraryClass) {
-        for (Class<?> clazz : libraryClass) {
-            add(clazz);
-        }
+    public Injector(String... packageNames) {
+        Set<String> packages = getPackages(packageNames);
+        Set<Class<?>> injectables = getInjectables(packages);
+        instances = Injectable.initialize(injectables);
     }
 
-    public void add(Class<?> clazz) {
-        processClass(clazz, Injection.class);
-        processFields(clazz, Injection.class);
+    private Set<Class<?>> getInjectables(Set<String> packages) {
+        return packages.stream()
+                .flatMap(packageName -> Injectable.getInjectables(packageName).stream())
+                .collect(Collectors.toSet());
     }
 
-    private void processFields(Class<?> clazz, Class<? extends Annotation> annotation) {
-        for (Field field : clazz.getDeclaredFields()) {
-            if (field.isAnnotationPresent(annotation)) {
-                Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-                try {
-                    instances.put(clazz.getCanonicalName(), constructor.newInstance());
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                    throw new InjectionException();
-                }
-            }
-        }
+    private Set<String> getPackages(String[] packages) {
+        return packages.length == 0 ? Set.of("") : new HashSet<>(Arrays.asList(packages));
     }
 
-    private void processClass(Class<?> clazz, Class<? extends Annotation> annotation) {
-        if (clazz.isAnnotationPresent(annotation)) {
-            Constructor<?> constructor = clazz.getDeclaredConstructors()[0];
-            try {
-                Object[] initArgs = new Object[0];
-                instances.put(clazz.getCanonicalName(), constructor.newInstance(initArgs));
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new InjectionException();
-            }
-        }
-    }
-
-    public Object getInstanceFor(Class<?> clazz) {
-        return Optional.ofNullable(instances.get(clazz.getName()))
-                .orElseThrow(InjectionException::new);
+    public Object getInstanceOf(Class<?> clazz) {
+        return instances.get(clazz.getCanonicalName());
     }
 }

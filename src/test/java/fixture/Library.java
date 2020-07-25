@@ -6,7 +6,6 @@ import info.developia.gti.Injection;
 
 @Injection
 public class Library {
-
     private final BookService bookService;
 
     public Library(BookService bookService) {

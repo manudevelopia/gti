@@ -1,8 +1,8 @@
 package fixture.model;
 
 public class Book {
-    private String title = "Gone with the wind";
-    private int pages = 190;
+    private final String title = "Gone with the wind";
+    private final int pages = 190;
 
     public String getTitle() {
         return title;
