@@ -35,7 +35,6 @@ public class Injectable {
         try {
             return getConstructor(clazz).newInstance(args);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
             throw new InjectionException("Cannot get an instance of the provided class '" + clazz.getCanonicalName() + "'");
         }
     }

@@ -1,6 +1,7 @@
 package info.developia.gti;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class Injector {
     }
 
     private Set<String> getPackages(String[] packages) {
-        return packages.length == 0 ? Set.of("") : new HashSet<>(Arrays.asList(packages));
+        return packages.length == 0 ? Collections.emptySet() : new HashSet<>(Arrays.asList(packages));
     }
 
     public Object getInstanceOf(Class<?> clazz) {
