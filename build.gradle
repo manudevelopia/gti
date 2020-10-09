@@ -27,8 +27,17 @@ publishing {
             groupId = 'info.developia.gti'
             artifactId = 'gti-core'
             version = '1.0-SNAPSHOT'
-
             from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/manudevelopia/gti"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
