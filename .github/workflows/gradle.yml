@@ -27,4 +27,4 @@ jobs:
     - name: Unit Tests
       run: ./gradlew test
     - name: Publish Artifact
-      run: ./gradlew publishGprPublicationToGitHubPackagesRepository
+      run: ./gradlew publish
