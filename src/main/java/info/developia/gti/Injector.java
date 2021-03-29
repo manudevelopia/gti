@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 public class Injector {
     private final Map<String, Object> instances;
 
-    public Injector(String... packageNames) {
+    public static Injector start(Class<?> clazz) {
+        return new Injector(clazz.getPackageName());
+    }
+
+    private Injector(String... packageNames) {
         Set<String> packages = getPackages(packageNames);
         Set<Class<?>> injectables = getInjectables(packages);
         instances = Injectable.initialize(injectables);

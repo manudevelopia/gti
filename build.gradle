@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.reflections:reflections:0.9.12'
+    implementation 'org.reflections:reflections:0.9.11'
 
     testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
     testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
