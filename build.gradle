@@ -22,14 +22,7 @@ test {
 }
 
 publishing {
-    publications {
-        maven(MavenPublication) {
-            groupId = 'info.developia.gti'
-            artifactId = 'gti-core'
-            version = '1.0-SNAPSHOT'
-            from components.java
-        }
-    }
+
     repositories {
         maven {
             name = "GitHubPackages"
