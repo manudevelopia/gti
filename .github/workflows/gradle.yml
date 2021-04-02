@@ -25,6 +25,6 @@ jobs:
     - name: Unit Tests
       run: ./gradlew test
     - name: Publish Artifact
-      run: ./gradlew publish
+      run: ./gradlew publish -Pversion=1.0-SNAPSHOT
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
