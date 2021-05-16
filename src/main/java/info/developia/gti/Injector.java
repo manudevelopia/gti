@@ -30,7 +30,7 @@ public class Injector {
         return packages.length == 0 ? Collections.emptySet() : new HashSet<>(Arrays.asList(packages));
     }
 
-    public Object getInstanceOf(Class<?> clazz) {
-        return instances.get(clazz.getCanonicalName());
+    public <T> T getInstanceOf(Class<T> clazz) {
+        return clazz.cast(instances.get(clazz.getCanonicalName()));
     }
 }
