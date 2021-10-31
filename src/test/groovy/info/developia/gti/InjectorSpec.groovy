@@ -9,7 +9,7 @@ class InjectorSpec extends Specification {
         given:
         Injector injector = Injector.start(Launcher)
         when:
-        Library result = (Library) injector.getInstanceOf(Library.class)
+        def result = injector.getInstanceOf(Library.class)
         then:
         result instanceof Library
     }
