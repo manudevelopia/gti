@@ -20,14 +20,14 @@ public class Injector {
         instances = Injectable.initialize(injectables);
     }
 
+    private Set<String> getPackages(String[] packages) {
+        return packages.length == 0 ? Collections.emptySet() : new HashSet<>(Arrays.asList(packages));
+    }
+
     private Set<Class<?>> getInjectables(Set<String> packages) {
         return packages.stream()
                 .flatMap(packageName -> Injectable.getInjectables(packageName).stream())
                 .collect(Collectors.toSet());
-    }
-
-    private Set<String> getPackages(String[] packages) {
-        return packages.length == 0 ? Collections.emptySet() : new HashSet<>(Arrays.asList(packages));
     }
 
     public <T> T getInstanceOf(Class<T> clazz) {
