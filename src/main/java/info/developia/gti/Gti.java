@@ -1,20 +1,17 @@
 package info.developia.gti;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class Injector {
+public class Gti {
     private final Map<String, Object> instances;
+    private static Gti instance;
 
-    public static Injector start(Class<?> clazz) {
-        return new Injector(clazz.getPackageName());
+    public static Gti start(Class<?> clazz) {
+        return new Gti(clazz.getPackageName());
     }
 
-    private Injector(String... packageNames) {
+    private Gti(String... packageNames) {
         Set<String> packages = getPackages(packageNames);
         Set<Class<?>> injectables = getInjectables(packages);
         instances = Injectable.initialize(injectables);

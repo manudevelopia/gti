@@ -1,28 +1,26 @@
 plugins {
-    id 'java'
-    id 'application'
+    id 'java-library'
     id 'groovy'
     id 'maven-publish'
 }
 
 repositories {
-    mavenLocal()
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    implementation 'org.reflections:reflections:0.9.11'
-
-    testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
-    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
+    implementation 'org.reflections:reflections:0.10.2'
 }
 
-test {
-    useJUnitPlatform()
+testing {
+    suites {
+        test {
+            useSpock('2.2-groovy-3.0')
+        }
+    }
 }
 
 publishing {
-
     repositories {
         maven {
             name = "GitHubPackages"

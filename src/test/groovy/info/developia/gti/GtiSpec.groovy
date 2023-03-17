@@ -4,10 +4,10 @@ import fixture.Launcher
 import fixture.Library
 import spock.lang.Specification
 
-class InjectorSpec extends Specification {
+class GtiSpec extends Specification {
     def "Injector should provide a instance of expected object"() {
         given:
-        Injector injector = Injector.start(Launcher)
+        Gti injector = Gti.start(Launcher)
         when:
         def result = injector.getInstanceOf(Library.class)
         then:
