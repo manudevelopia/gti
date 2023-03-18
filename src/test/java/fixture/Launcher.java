@@ -1,17 +1,15 @@
 package fixture;
 
-import info.developia.gti.Gti;
-import info.developia.gti.Injection;
+import info.developia.gti.Container;
+import info.developia.gti.Inject;
 
 public class Launcher {
 
-    @Injection
-    private Library library;
+    @Inject
+    Library library;
 
     public static void main(String[] args) {
-        var launcher = new Launcher();
-
-        Gti.start(Launcher.class);
+        var launcher = Container.startOn(Launcher.class);
         launcher.library.process();
     }
 }

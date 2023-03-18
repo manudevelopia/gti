@@ -1,7 +1,7 @@
 package fixture.repository;
 
-import info.developia.gti.Injection;
 import fixture.model.Book;
+import info.developia.gti.Injection;
 
 @Injection
 public class BookRepository {

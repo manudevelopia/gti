@@ -2,15 +2,13 @@ package fixture;
 
 import fixture.model.Book;
 import fixture.service.BookService;
+import info.developia.gti.Inject;
 import info.developia.gti.Injection;
 
 @Injection
 public class Library {
-    private final BookService bookService;
-
-    public Library(BookService bookService) {
-        this.bookService = bookService;
-    }
+    @Inject
+    private BookService bookService;
 
     public void process() {
         Book book = new Book();

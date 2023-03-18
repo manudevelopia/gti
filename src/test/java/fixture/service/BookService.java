@@ -2,15 +2,18 @@ package fixture.service;
 
 import fixture.model.Book;
 import fixture.repository.BookRepository;
+import info.developia.gti.Inject;
 import info.developia.gti.Injection;
 
 @Injection
 public class BookService {
-    private final BookRepository bookRepository;
+    @Inject
+    private BookRepository bookRepository;
+//    private final BookRepository bookRepository;
 
-    public BookService(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
-    }
+//    public BookService(BookRepository bookRepository) {
+//        this.bookRepository = bookRepository;
+//    }
 
     public void add(Book book) {
         bookRepository.add(book);
