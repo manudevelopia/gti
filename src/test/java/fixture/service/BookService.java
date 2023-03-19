@@ -8,12 +8,12 @@ import info.developia.gti.Injection;
 @Injection
 public class BookService {
     @Inject
-    private BookRepository bookRepository;
-//    private final BookRepository bookRepository;
+//    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-//    public BookService(BookRepository bookRepository) {
-//        this.bookRepository = bookRepository;
-//    }
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     public void add(Book book) {
         bookRepository.add(book);
