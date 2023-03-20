@@ -3,11 +3,11 @@ package info.developia.gti
 import fixture.Launcher
 import spock.lang.Specification
 
-class InjectSpec extends Specification {
+class InjectorSpec extends Specification {
 
     def "test"() {
         given:
-        var launcher = Container.startOn(Launcher)
+        var launcher = Gti.startOn(Launcher)
         when:
         launcher.library.process()
         then:

@@ -1,9 +1,7 @@
 package fixture.repository;
 
 import fixture.model.Book;
-import info.developia.gti.Injection;
 
-@Injection
 public class BookRepository {
     public void add(Book book) {
         System.out.println(book + " book has been added");

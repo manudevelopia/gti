@@ -1,30 +1,24 @@
 package fixture.service;
 
-import info.developia.gti.Inject;
-import info.developia.gti.Injection;
+import info.developia.gti.Injector;
 
-@Injection
 public class AnyService {
-//    @Inject
-//    private final AnyService anyService;
-    @Inject
+    @Injector
+    private final OtherService otherService;
+    @Injector
     private final AnotherService anotherService;
 
-    public AnyService(AnotherService anotherService) {
+    public AnyService(AnotherService anotherService, OtherService otherService) {
+        this.otherService = otherService;
         this.anotherService = anotherService;
     }
 
-//    public AnyService(AnyService anyService, AnotherService anotherService) {
-//        this.anyService = anyService;
-//        this.anotherService = anotherService;
-//    }
-
     public void start() {
         anotherService.run();
-//        anyService.run();
+        otherService.run();
     }
 
-    private void run() {
+    public void run() {
         System.out.println("Hello to from AnyService run()");
     }
 }

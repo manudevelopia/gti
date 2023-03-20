@@ -1,8 +1,9 @@
 package fixture.service;
 
-import info.developia.gti.Injection;
-
-@Injection
 public class OtherService {
-    private AnyService anyService;
+
+    void run() {
+        System.out.println("Hello to from OtherService run()");
+    }
+
 }

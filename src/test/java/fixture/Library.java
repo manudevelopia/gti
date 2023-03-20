@@ -3,16 +3,19 @@ package fixture;
 import fixture.model.Book;
 import fixture.service.AnyService;
 import fixture.service.BookService;
-import info.developia.gti.Inject;
-import info.developia.gti.Injection;
+import info.developia.gti.Injector;
 
-@Injection
 public class Library {
-    @Inject
-    private BookService bookService;
+    @Injector
+    private final BookService bookService;
 
-    @Inject
-    private AnyService anyService;
+    @Injector
+    private final AnyService anyService;
+
+    public Library(BookService bookService, AnyService anyService) {
+        this.bookService = bookService;
+        this.anyService = anyService;
+    }
 
     public void process() {
         Book book = new Book();
@@ -22,5 +25,6 @@ public class Library {
         bookService.del(book);
 
         anyService.start();
+        anyService.run();
     }
 }
