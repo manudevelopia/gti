@@ -8,7 +8,6 @@ import info.developia.gti.Injection;
 @Injection
 public class BookService {
     @Inject
-//    private BookRepository bookRepository;
     private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
