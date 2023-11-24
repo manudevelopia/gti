@@ -24,6 +24,15 @@ public class Gti {
         return gti.getInstance(clazz);
     }
 
+    private List<Field> getFieldsToInject(String packageName) {
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setUrls(ClasspathHelper.forPackage(packageName))
+                .setScanners(Scanners.FieldsAnnotated));
+        return reflections.getFieldsAnnotatedWith(Injector.class).stream().distinct()
+                .sorted(Comparator.comparing(field -> field.getType().getConstructors()[0].getParameters().length))
+                .collect(Collectors.toList());
+    }
+
     private void initialize(Class<?> clazz) {
         if (instances.containsKey(clazz)) return;
         var constructor = clazz.getConstructors()[0];
@@ -38,15 +47,6 @@ public class Gti {
     private Object[] getConstructorArgs(Constructor<?> constructor) {
         Set<Class<?>> argumentClasses = Arrays.stream(constructor.getParameters()).map(Parameter::getType).collect(Collectors.toSet());
         return argumentClasses.stream().map(instances::get).toArray();
-    }
-
-    private List<Field> getFieldsToInject(String packageName) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(packageName))
-                .setScanners(Scanners.FieldsAnnotated));
-        return reflections.getFieldsAnnotatedWith(Injector.class).stream().distinct()
-                .sorted(Comparator.comparing(f -> f.getType().getConstructors()[0].getParameters().length))
-                .collect(Collectors.toList());
     }
 
     private <T> T getInstance(Class<T> clazz) {
