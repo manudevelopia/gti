@@ -51,5 +51,9 @@ public class Gti {
         }
         return instance;
     }
+
+    public static void stop() {
+        instance().instances.clear();
+    }
 }
 
