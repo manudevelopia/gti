@@ -20,7 +20,7 @@ public class Gti {
 
     private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
         checkCircularDependency(clazz, visitedClasses);
-        var constructor = clazz.getConstructors()[0];
+        var constructor = getConstructor(clazz);
         var arguments = getArguments(constructor, visitedClasses);
         try {
             var instance = clazz.cast(constructor.newInstance(arguments));
@@ -29,6 +29,10 @@ public class Gti {
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new GtiException("Field cannot be initialized " + e.getMessage());
         }
+    }
+
+    private <T> Constructor<?> getConstructor(Class<T> clazz) {
+        return clazz.getConstructors()[0];
     }
 
     private <T> void checkCircularDependency(Class<T> clazz, Set<Object> visitedClasses) {
