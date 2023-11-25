@@ -1,71 +1,51 @@
 package info.developia.gti;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class Gti {
-    private final Map<Class<?>, Object> instances = new HashMap<>();
+    private final Map<Class<?>, Object> instances = new ConcurrentSkipListMap<>(Comparator.comparing(Class::getName));
+    private static Gti gti;
+
+    private static Gti instance() {
+        if (gti == null) gti = new Gti();
+        return gti;
+    }
 
     public static <T> T startOn(Class<T> clazz) {
-        Gti gti = new Gti();
-        var injectables = gti.getFieldsToInject(clazz.getPackageName());
-        injectables.forEach(field -> gti.initialize(field.getType()));
-        injectables.forEach(field -> gti.initialize(field.getDeclaringClass()));
-        injectables.forEach(gti::injectField);
-        return gti.getInstance(clazz);
+        return instance().buildInstance(clazz, new HashSet<>());
     }
 
-    private List<Field> getFieldsToInject(String packageName) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(packageName))
-                .setScanners(Scanners.FieldsAnnotated));
-        return reflections.getFieldsAnnotatedWith(Injector.class).stream().distinct()
-                .sorted(Comparator.comparing(field -> field.getType().getConstructors()[0].getParameters().length))
-                .collect(Collectors.toList());
-    }
-
-    private void initialize(Class<?> clazz) {
-        if (instances.containsKey(clazz)) return;
+    private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
+        if (visitedClasses.contains(clazz)) {
+            throw new GtiException("Circular dependency detected, " + clazz.getName() + " have been previously referenced.");
+        }
+        visitedClasses.add(clazz);
         var constructor = clazz.getConstructors()[0];
-        var arguments = getConstructorArgs(constructor);
+        var arguments = getConstructorArgs(constructor, visitedClasses);
         try {
-            instances.put(clazz, constructor.newInstance(arguments));
+            var instance = clazz.cast(constructor.newInstance(arguments));
+            instances.put(clazz, instance);
+            return instance;
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new GtiException("Field cannot be initialized " + e.getMessage());
         }
     }
 
-    private Object[] getConstructorArgs(Constructor<?> constructor) {
-        Set<Class<?>> argumentClasses = Arrays.stream(constructor.getParameters()).map(Parameter::getType).collect(Collectors.toSet());
-        return argumentClasses.stream().map(instances::get).toArray();
+    private Object[] getConstructorArgs(Constructor<?> constructor, Set<Object> visitedClasses) {
+        return Arrays.stream(constructor.getParameterTypes())
+                .map(type -> instances.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
+                .toArray();
     }
 
-    private <T> T getInstance(Class<T> clazz) {
-        T instance = clazz.cast(instances.get(clazz));
+    public static <T> T get(Class<T> clazz) {
+        T instance = clazz.cast(instance().instances.get(clazz));
         if (instance == null) {
             throw new GtiException("No instance found for " + clazz.getName());
         }
         return instance;
-    }
-
-    private void injectField(Field field) {
-        field.setAccessible(true);
-        try {
-            var object = getInstance(field.getDeclaringClass());
-            var dependency = getInstance(field.getType());
-            field.set(object, dependency);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
 
