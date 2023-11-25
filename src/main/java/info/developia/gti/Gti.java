@@ -19,10 +19,7 @@ public class Gti {
     }
 
     private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
-        if (visitedClasses.contains(clazz)) {
-            throw new GtiException("Circular dependency detected, " + clazz.getName() + " have been previously referenced.");
-        }
-        visitedClasses.add(clazz);
+        checkCircularDependency(clazz, visitedClasses);
         var constructor = clazz.getConstructors()[0];
         var arguments = getConstructorArgs(constructor, visitedClasses);
         try {
@@ -32,6 +29,13 @@ public class Gti {
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new GtiException("Field cannot be initialized " + e.getMessage());
         }
+    }
+
+    private <T> void checkCircularDependency(Class<T> clazz, Set<Object> visitedClasses) {
+        if (visitedClasses.contains(clazz)) {
+            throw new GtiException("Circular dependency detected, " + clazz.getName() + " have been previously referenced.");
+        }
+        visitedClasses.add(clazz);
     }
 
     private Object[] getConstructorArgs(Constructor<?> constructor, Set<Object> visitedClasses) {
