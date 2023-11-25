@@ -21,7 +21,7 @@ public class Gti {
     private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
         checkCircularDependency(clazz, visitedClasses);
         var constructor = clazz.getConstructors()[0];
-        var arguments = getConstructorArgs(constructor, visitedClasses);
+        var arguments = getArguments(constructor, visitedClasses);
         try {
             var instance = clazz.cast(constructor.newInstance(arguments));
             instances.put(clazz, instance);
@@ -38,7 +38,7 @@ public class Gti {
         visitedClasses.add(clazz);
     }
 
-    private Object[] getConstructorArgs(Constructor<?> constructor, Set<Object> visitedClasses) {
+    private Object[] getArguments(Constructor<?> constructor, Set<Object> visitedClasses) {
         return Arrays.stream(constructor.getParameterTypes())
                 .map(type -> instances.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
                 .toArray();
