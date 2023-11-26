@@ -1,23 +1,46 @@
 package info.developia.gti
 
-import fixture.Launcher
+
 import fixture.Library
+import fixture.repository.BookRepository
+import fixture.service.AnotherService
+import fixture.service.AnyService
+import fixture.service.BookService
+import fixture.service.OtherService
 import spock.lang.Specification
 
 class GtiSpec extends Specification {
-    def "Injector should provide a instance of expected object"() {
+
+    def setup() {
+        Gti.startOn(Library.class)
+    }
+
+    def cleanup() {
+        Gti.stop()
+    }
+
+    def "Should return a instance of expected object on startOn"() {
         when:
-        var result = Gti.startOn(Library)
+        var result = Gti.startOn(Library.class)
         then:
         result instanceof Library
     }
 
-    def "test"() {
+    def "Should return a instance of expected object on get"() {
+        expect:
+        def result = Gti.get(clazz)
+        clazz.isCase(result)
+        where:
+        clazz << [AnyService, AnotherService, BookService, BookRepository, OtherService]
+    }
+
+    def "Should not have any instances after stop"() {
         given:
-        var launcher = Gti.startOn(Launcher)
+        Gti.stop()
         when:
-        launcher.library.process()
+        Gti.get(Library)
         then:
-        noExceptionThrown()
+        var exception = thrown(GtiException.class)
+        exception.message == "No instance found for fixture.Library"
     }
 }
