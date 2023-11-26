@@ -8,7 +8,10 @@ public class Launcher {
     public static void main(String[] args) {
         var library = Gti.startOn(Library.class);
         library.process();
-        Gti.get(AnotherService.class).run();
-//        Gti.get(Stream.class).toArray();
+
+        var anotherService = Gti.get(AnotherService.class);
+        anotherService.run();
+
+        Gti.stop();
     }
 }

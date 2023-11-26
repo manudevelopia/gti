@@ -1,11 +1,7 @@
 package fixture.service;
 
-import info.developia.gti.Injector;
-
 public class AnyService {
-    @Injector
     private final OtherService otherService;
-    @Injector
     private final AnotherService anotherService;
 
     public AnyService(AnotherService anotherService, OtherService otherService) {

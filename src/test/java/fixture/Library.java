@@ -3,13 +3,13 @@ package fixture;
 import fixture.model.Book;
 import fixture.service.AnyService;
 import fixture.service.BookService;
+import fixture.service.OtherService;
+import info.developia.gti.Gti;
 import info.developia.gti.Injector;
 
 public class Library {
-    @Injector
     private final BookService bookService;
 
-    @Injector
     private final AnyService anyService;
 
     public Library(BookService bookService, AnyService anyService) {

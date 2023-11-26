@@ -5,7 +5,6 @@ import fixture.repository.BookRepository;
 import info.developia.gti.Injector;
 
 public class BookService {
-    @Injector
     private final BookRepository bookRepository;
 
     public BookService(BookRepository bookRepository) {
