@@ -23,9 +23,9 @@ public class Gti {
         var constructor = getConstructor(clazz);
         var arguments = getArguments(constructor, visitedClasses);
         try {
-            var instance = clazz.cast(constructor.newInstance(arguments));
+            var instance = constructor.newInstance(arguments);
             instances.put(clazz, instance);
-            return instance;
+            return clazz.cast(instance);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
             throw new GtiException("Field cannot be initialized " + e.getMessage());
         }
@@ -49,11 +49,10 @@ public class Gti {
     }
 
     public static <T> T get(Class<T> clazz) {
-        T instance = clazz.cast(instance().instances.get(clazz));
-        if (instance == null) {
+        if (!instance().instances.containsKey(clazz)) {
             throw new GtiException("No instance found for " + clazz.getName());
         }
-        return instance;
+        return clazz.cast(instance().instances.get(clazz));
     }
 
     public static void stop() {
