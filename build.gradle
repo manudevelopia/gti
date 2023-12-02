@@ -1,11 +1,18 @@
+import org.gradle.api.publish.maven.MavenPublication
+
 plugins {
     id 'java-library'
-    id 'groovy'
     id 'maven-publish'
+    id 'groovy'
 }
+
+description = "Gti Dependency injection library"
+group = 'info.developia.lib'
+version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 testing {
@@ -16,15 +23,23 @@ testing {
     }
 }
 
+
 publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/manudevelopia/gti"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
+    publications {
+        maven(MavenPublication) {
+            from components.java
         }
     }
 }
+//publishing {
+//    repositories {
+//        maven {
+//            name = "GitHubPackages"
+//            url = "https://maven.pkg.github.com/manudevelopia/gti"
+//            credentials {
+//                username = System.getenv("GITHUB_ACTOR")
+//                password = System.getenv("GITHUB_TOKEN")
+//            }
+//        }
+//    }
+//}
