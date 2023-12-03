@@ -25,3 +25,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Build with Gradle
         run: ./gradlew build
+      - name: Create Secret File
+        run: |
+          echo -n "${{ secrets.GRADLE_PROPERTIES }}" | base64 --decode > ~/.gradle/gradle.properties
+          echo -n "${{ secrets.SIGNING_SECRET_KEY_RING_CONTENT }}" | base64 --decode > ~/.gradle/secring.gpg
+      - name: Publish Snapshot
+        run: ./gradlew publishToSonatype
