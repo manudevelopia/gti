@@ -9,13 +9,32 @@ public class Gti {
     private final Map<Class<?>, Object> instances = new ConcurrentSkipListMap<>(Comparator.comparing(Class::getName));
     private static Gti gti;
 
+    public static Gti inject() {
+        return instance();
+    }
+
     private static Gti instance() {
         if (gti == null) gti = new Gti();
         return gti;
     }
 
-    public static <T> T startOn(Class<T> clazz) {
-        return instance().buildInstance(clazz, new HashSet<>());
+    public Gti with(Object object) {
+        instances.put(object.getClass(), object);
+        return this;
+    }
+
+    public Gti with(List<Object> objects) {
+        objects.forEach(this::with);
+        return this;
+    }
+
+    public Gti with(Object... objects) {
+        for (Object object : objects) with(object);
+        return this;
+    }
+
+    public <T> T startOn(Class<T> clazz) {
+        return buildInstance(clazz, new HashSet<>());
     }
 
     private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
@@ -59,4 +78,3 @@ public class Gti {
         instance().instances.clear();
     }
 }
-
