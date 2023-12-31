@@ -1,4 +1,4 @@
-package fixture.util;
+package lib.util;
 
 public class Mapper {
     public String capitol(String text) {

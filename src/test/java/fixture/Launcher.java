@@ -1,7 +1,7 @@
 package fixture;
 
 import fixture.service.AnotherService;
-import fixture.util.Mapper;
+import lib.util.Mapper;
 import info.developia.gti.Gti;
 
 public class Launcher {

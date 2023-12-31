@@ -7,7 +7,7 @@ import fixture.service.AnotherService
 import fixture.service.AnyService
 import fixture.service.BookService
 import fixture.service.OtherService
-import fixture.util.Mapper
+import lib.util.Mapper
 import spock.lang.Specification
 
 class GtiSpec extends Specification {
