@@ -19,7 +19,7 @@ plugins {
 
 Add `Gti.startOn()` with the main application class. This will return the instance of the class.
 ```java
-var application = Gti.startOn(Application.class);
+var application = Gti.inject().startOn(Application.class);
 application.run();
 ```
 
