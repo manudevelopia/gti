@@ -1,13 +1,11 @@
 package info.developia.gti;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.HashSet;
+import java.util.List;
 
 public class Gti {
-    private final Map<Class<?>, Object> instances = new ConcurrentSkipListMap<>(Comparator.comparing(Class::getName));
     private static Gti gti;
+    private final InstanceObjectsHelper instanceObjectHelper = new InstanceObjectsHelper();
 
     public static Gti inject() {
         return instance();
@@ -19,7 +17,7 @@ public class Gti {
     }
 
     public Gti with(Object object) {
-        instances.put(object.getClass(), object);
+        instanceObjectHelper.add(object);
         return this;
     }
 
@@ -34,47 +32,17 @@ public class Gti {
     }
 
     public <T> T startOn(Class<T> clazz) {
-        return buildInstance(clazz, new HashSet<>());
-    }
-
-    private <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
-        checkCircularDependency(clazz, visitedClasses);
-        var constructor = getConstructor(clazz);
-        var arguments = getArguments(constructor, visitedClasses);
-        try {
-            var instance = constructor.newInstance(arguments);
-            instances.put(clazz, instance);
-            return clazz.cast(instance);
-        } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new GtiException("Field cannot be initialized " + e.getMessage());
-        }
-    }
-
-    private <T> Constructor<?> getConstructor(Class<T> clazz) {
-        return clazz.getConstructors()[0];
-    }
-
-    private <T> void checkCircularDependency(Class<T> clazz, Set<Object> visitedClasses) {
-        if (visitedClasses.contains(clazz)) {
-            throw new GtiException("Circular dependency detected, " + clazz.getName() + " have been previously referenced.");
-        }
-        visitedClasses.add(clazz);
-    }
-
-    private Object[] getArguments(Constructor<?> constructor, Set<Object> visitedClasses) {
-        return Arrays.stream(constructor.getParameterTypes())
-                .map(type -> instances.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
-                .toArray();
+        return instanceObjectHelper.buildInstance(clazz, new HashSet<>());
     }
 
     public static <T> T get(Class<T> clazz) {
-        if (!instance().instances.containsKey(clazz)) {
+        if (!instance().instanceObjectHelper.contains(clazz)) {
             throw new GtiException("No instance found for " + clazz.getName());
         }
-        return clazz.cast(instance().instances.get(clazz));
+        return clazz.cast(instance().instanceObjectHelper.get(clazz));
     }
 
     public static void stop() {
-        instance().instances.clear();
+        instance().instanceObjectHelper.clear();
     }
 }
