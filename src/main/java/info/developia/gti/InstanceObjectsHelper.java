@@ -10,13 +10,14 @@ import java.util.concurrent.ConcurrentSkipListMap;
 
 public class InstanceObjectsHelper {
     private final Map<Class<?>, Object> instanceObjects = new ConcurrentSkipListMap<>(Comparator.comparing(Class::getName));
+    private String packageBase;
 
     public <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
         checkCircularDependency(clazz, visitedClasses);
         var constructor = getFirstConstructor(clazz);
-        var arguments = getArguments(constructor, visitedClasses);
+        var parametersInstances = getConstructorParametersInstances(constructor, visitedClasses);
         try {
-            var instance = constructor.newInstance(arguments);
+            var instance = constructor.newInstance(parametersInstances);
             instanceObjects.put(clazz, instance);
             return clazz.cast(instance);
         } catch (InvocationTargetException | InstantiationException | IllegalAccessException e) {
@@ -35,10 +36,23 @@ public class InstanceObjectsHelper {
         return clazz.getConstructors()[0];
     }
 
-    private Object[] getArguments(Constructor<?> constructor, Set<Object> visitedClasses) {
-        return Arrays.stream(constructor.getParameterTypes())
-                .map(type -> instanceObjects.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
+    private Object[] getConstructorParametersInstances(Constructor<?> constructor, Set<Object> visitedClasses) {
+        var parametersInstances = Arrays.stream(constructor.getParameterTypes())
+                .filter(this::checkPackageBase)
+                .map(type ->instanceObjects.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
                 .toArray();
+        if (constructor.getParameterTypes().length != parametersInstances.length)
+            throw new GtiException("Not all the arguments could be fulfilled for " + constructor.getName() + " constructor");
+        return parametersInstances;
+    }
+
+    private boolean checkPackageBase(Class<?> clazz) {
+        return clazz.getPackageName().startsWith(packageBase);
+    }
+
+    public void setPackageBase(String packageBase) {
+        if (this.packageBase == null)
+            this.packageBase = packageBase;
     }
 
     public void add(Object object) {

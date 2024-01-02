@@ -16,6 +16,11 @@ public class Gti {
         return gti;
     }
 
+    public Gti packageBase(String packageName){
+        instanceObjectHelper.setPackageBase(packageName);
+        return this;
+    }
+
     public Gti with(Object object) {
         instanceObjectHelper.add(object);
         return this;
@@ -32,6 +37,7 @@ public class Gti {
     }
 
     public <T> T startOn(Class<T> clazz) {
+        instanceObjectHelper.setPackageBase(clazz.getPackageName());
         return instanceObjectHelper.buildInstance(clazz, new HashSet<>());
     }
 

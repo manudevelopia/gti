@@ -1,6 +1,6 @@
 package fixture;
 
-import fixture.service.AnotherService;
+import fixture.service.AnotherNoDependencyService;
 import lib.util.Mapper;
 import info.developia.gti.Gti;
 
@@ -11,7 +11,7 @@ public class Launcher {
         Library library = Gti.inject().with(mapper).startOn(Library.class);
         library.process();
 
-        var anotherService = Gti.get(AnotherService.class);
+        var anotherService = Gti.get(AnotherNoDependencyService.class);
         anotherService.run();
 
         Gti.stop();

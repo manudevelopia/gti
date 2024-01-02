@@ -1,17 +1,17 @@
 package fixture.service;
 
 public class AnyService {
-    private final OtherService otherService;
-    private final AnotherService anotherService;
+    private final NoDependencyService noDependencyService;
+    private final AnotherNoDependencyService anotherNoDependencyService;
 
-    public AnyService(AnotherService anotherService, OtherService otherService) {
-        this.otherService = otherService;
-        this.anotherService = anotherService;
+    public AnyService(AnotherNoDependencyService anotherNoDependencyService, NoDependencyService noDependencyService) {
+        this.noDependencyService = noDependencyService;
+        this.anotherNoDependencyService = anotherNoDependencyService;
     }
 
     public void start() {
-        anotherService.run();
-        otherService.run();
+        anotherNoDependencyService.run();
+        noDependencyService.run();
     }
 
     public void run() {
