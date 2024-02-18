@@ -6,7 +6,7 @@ plugins {
 }
 
 description = "Gti Dependency injection library"
-group = 'info.developia.lib'
+group = 'info.developia'
 version = '1.0-SNAPSHOT'
 
 repositories {
