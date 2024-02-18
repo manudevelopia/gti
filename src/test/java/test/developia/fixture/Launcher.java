@@ -1,7 +1,7 @@
-package fixture;
+package test.developia.fixture;
 
-import fixture.service.AnotherNoDependencyService;
-import lib.util.Mapper;
+import test.developia.fixture.service.AnotherNoDependencyService;
+import test.outside.fixture.service.util.Mapper;
 import info.developia.gti.Gti;
 
 public class Launcher {

@@ -1,8 +1,8 @@
-package fixture;
+package test.developia.fixture;
 
-import fixture.model.Book;
-import fixture.service.AnyService;
-import fixture.service.BookService;
+import test.developia.fixture.model.Book;
+import test.developia.fixture.service.AnyService;
+import test.developia.fixture.service.BookService;
 
 public class Library {
     private final BookService bookService;

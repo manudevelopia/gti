@@ -1,4 +1,4 @@
-package fixture.model;
+package test.developia.fixture.model;
 
 public class Book {
     private final String title = "Gone with the wind";

@@ -1,6 +1,6 @@
-package fixture.repository;
+package test.developia.fixture.repository;
 
-import fixture.model.Book;
+import test.developia.fixture.model.Book;
 
 public class BookRepository {
     public void add(Book book) {

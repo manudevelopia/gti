@@ -1,8 +1,7 @@
-package fixture.service;
+package test.developia.fixture.service;
 
-import fixture.model.Book;
-import fixture.repository.BookRepository;
-import info.developia.gti.Injector;
+import test.developia.fixture.model.Book;
+import test.developia.fixture.repository.BookRepository;
 
 public class BookService {
     private final BookRepository bookRepository;

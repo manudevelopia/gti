@@ -1,15 +1,14 @@
 package info.developia.gti
 
-
-import fixture.Library
-import fixture.repository.BookRepository
-import fixture.service.AnotherNoDependencyService
-import fixture.service.AnyService
-import fixture.service.BookService
-import fixture.service.NoDependencyService
-import fixture.service.OutsideDependencyService
-import lib.util.Mapper
 import spock.lang.Specification
+import test.developia.fixture.Library
+import test.developia.fixture.repository.BookRepository
+import test.developia.fixture.service.OutsideDependencyService
+import test.outside.fixture.service.util.Mapper
+import test.developia.fixture.service.AnyService
+import test.developia.fixture.service.AnotherNoDependencyService
+import test.developia.fixture.service.BookService
+import test.developia.fixture.service.NoDependencyService
 
 class GtiSpec extends Specification {
 
@@ -52,14 +51,14 @@ class GtiSpec extends Specification {
         Gti.get(Library)
         then:
         var exception = thrown(GtiException.class)
-        exception.message == "No instance found for fixture.Library"
+        exception.message.startsWith "No instance found for"
     }
 
-    def "Should return an error complaining about external"(){
+    def "Should return an error complaining about external"() {
         when:
         Gti.inject().startOn(OutsideDependencyService.class)
         then:
         var exception = thrown(GtiException.class)
-        exception.message == "Not all the arguments could be fulfilled for fixture.service.OutsideDependencyService constructor"
+        exception.message.startsWith "Not all the arguments could be fulfilled for"
     }
 }

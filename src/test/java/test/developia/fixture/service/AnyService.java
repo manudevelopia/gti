@@ -1,4 +1,4 @@
-package fixture.service;
+package test.developia.fixture.service;
 
 public class AnyService {
     private final NoDependencyService noDependencyService;

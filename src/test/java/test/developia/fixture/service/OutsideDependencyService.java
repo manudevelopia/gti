@@ -1,6 +1,6 @@
-package fixture.service;
+package test.developia.fixture.service;
 
-import lib.util.Mapper;
+import test.outside.fixture.service.util.Mapper;
 
 public class OutsideDependencyService {
     private final Mapper mapper;
