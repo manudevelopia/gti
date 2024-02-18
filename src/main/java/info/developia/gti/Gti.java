@@ -16,7 +16,7 @@ public class Gti {
         return gti;
     }
 
-    public Gti packageBase(String packageName){
+    public Gti packageBase(String packageName) {
         instanceObjectHelper.setPackageBase(packageName);
         return this;
     }
@@ -37,8 +37,23 @@ public class Gti {
     }
 
     public <T> T startOn(Class<T> clazz) {
-        instanceObjectHelper.setPackageBase(clazz.getPackageName());
+        if (instanceObjectHelper.getPackageBase() == null) {
+            setDefaultPackageBase(clazz.getPackageName());
+        }
         return instanceObjectHelper.buildInstance(clazz, new HashSet<>());
+    }
+
+    private void setDefaultPackageBase(String packageName) {
+        var packageBase = packageName.substring(0, nthIndexOf(packageName, ".", 2));
+        instanceObjectHelper.setPackageBase(packageBase);
+    }
+
+    int nthIndexOf(String input, String substring, int nth) {
+        if (nth == 1) {
+            return input.indexOf(substring);
+        } else {
+            return input.indexOf(substring, nthIndexOf(input, substring, nth - 1) + substring.length());
+        }
     }
 
     public static <T> T get(Class<T> clazz) {

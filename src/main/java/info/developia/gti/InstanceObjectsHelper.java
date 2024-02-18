@@ -38,21 +38,24 @@ public class InstanceObjectsHelper {
 
     private Object[] getConstructorParametersInstances(Constructor<?> constructor, Set<Object> visitedClasses) {
         var parametersInstances = Arrays.stream(constructor.getParameterTypes())
-                .filter(this::checkPackageBase)
-                .map(type ->instanceObjects.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
+                .filter(this::isObjectReachable)
+                .map(type -> instanceObjects.computeIfAbsent(type, clazz -> buildInstance(clazz, visitedClasses)))
                 .toArray();
         if (constructor.getParameterTypes().length != parametersInstances.length)
             throw new GtiException("Not all the arguments could be fulfilled for " + constructor.getName() + " constructor");
         return parametersInstances;
     }
 
-    private boolean checkPackageBase(Class<?> clazz) {
-        return clazz.getPackageName().startsWith(packageBase);
+    private boolean isObjectReachable(Class<?> clazz) {
+        return instanceObjects.containsKey(clazz) || clazz.getPackageName().startsWith(packageBase);
+    }
+
+    public String getPackageBase() {
+        return packageBase;
     }
 
     public void setPackageBase(String packageBase) {
-        if (this.packageBase == null)
-            this.packageBase = packageBase;
+        this.packageBase = packageBase;
     }
 
     public void add(Object object) {
