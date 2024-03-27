@@ -39,14 +39,15 @@ public class InstanceHelper {
     private Object[] getConstructorParametersInstances(Constructor<?> constructor, Set<Object> visitedClasses) {
         var parametersInstances = Arrays.stream(constructor.getParameterTypes())
                 .filter(this::isObjectReachable)
-                .map(type -> getInstance(buildKey(type), visitedClasses))
+                .map(type -> getInstance(type, visitedClasses))
                 .toArray();
         if (constructor.getParameterTypes().length != parametersInstances.length)
             throw new GtiException("Not all the arguments could be fulfilled for " + constructor.getName() + " constructor");
         return parametersInstances;
     }
 
-    private Object getInstance(Key key, Set<Object> visitedClasses) {
+    private Object getInstance(Class<?> type, Set<Object> visitedClasses) {
+        Key key = new Key(type.getName(), type);
         return instances.computeIfAbsent(key, clazz -> buildInstance(clazz.getClazz(), visitedClasses));
     }
 
@@ -63,17 +64,17 @@ public class InstanceHelper {
     }
 
     public void addInstance(Object object) {
-        Key key = buildKey(object.getClass());
+        Key key = new Key(object.getClass().getName(), object.getClass());
         instances.put(key, object);
     }
 
     public <T> void addInstance(Class<T> clazz, Object instance) {
-        Key key = buildKey(clazz);
+        Key key = new Key(clazz.getName(), clazz);
         instances.put(key, instance);
     }
 
     public void addInstance(String keyName, Object object) {
-        Key key = buildKey(keyName, object);
+        Key key = new Key(keyName, object.getClass());
         instances.put(key, object);
     }
 
@@ -82,19 +83,11 @@ public class InstanceHelper {
     }
 
     public <T> boolean contains(Class<T> clazz) {
-        Key key = buildKey(clazz);
+        Key key = new Key(clazz.getName(), clazz);
         return instances.containsKey(key);
     }
 
     public <T> Object get(Class<T> clazz) {
-        return instances.get(buildKey(clazz));
-    }
-
-    private static Key buildKey(String keyName, Object object) {
-        return new Key(keyName, object.getClass());
-    }
-
-    private static <T> Key buildKey(Class<T> clazz) {
-        return buildKey(clazz.getName(), clazz);
+        return instances.get(new Key(clazz.getName(), clazz));
     }
 }
