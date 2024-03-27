@@ -22,7 +22,12 @@ public class Gti {
     }
 
     public Gti with(Object object) {
-        instanceHelper.add(object);
+        instanceHelper.addInstance(object);
+        return this;
+    }
+
+    public Gti withAs(Object object, String keyName){
+        instanceHelper.addInstance(keyName, object);
         return this;
     }
 
