@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Gti {
     private static Gti gti;
-    private final InstanceObjectsHelper instanceObjectHelper = new InstanceObjectsHelper();
+    private final InstanceHelper instanceHelper = new InstanceHelper();
 
     public static Gti inject() {
         return instance();
@@ -17,12 +17,12 @@ public class Gti {
     }
 
     public Gti packageBase(String packageName) {
-        instanceObjectHelper.setPackageBase(packageName);
+        instanceHelper.setPackageBase(packageName);
         return this;
     }
 
     public Gti with(Object object) {
-        instanceObjectHelper.add(object);
+        instanceHelper.add(object);
         return this;
     }
 
@@ -37,15 +37,15 @@ public class Gti {
     }
 
     public <T> T startOn(Class<T> clazz) {
-        if (instanceObjectHelper.getPackageBase() == null) {
+        if (instanceHelper.getPackageBase() == null) {
             setDefaultPackageBase(clazz.getPackageName());
         }
-        return instanceObjectHelper.buildInstance(clazz, new HashSet<>());
+        return instanceHelper.buildInstance(clazz, new HashSet<>());
     }
 
     private void setDefaultPackageBase(String packageName) {
         var packageBase = packageName.substring(0, nthIndexOf(packageName, ".", 2));
-        instanceObjectHelper.setPackageBase(packageBase);
+        instanceHelper.setPackageBase(packageBase);
     }
 
     int nthIndexOf(String input, String substring, int nth) {
@@ -57,13 +57,13 @@ public class Gti {
     }
 
     public static <T> T get(Class<T> clazz) {
-        if (!instance().instanceObjectHelper.contains(clazz)) {
+        if (!instance().instanceHelper.contains(clazz)) {
             throw new GtiException("No instance found for " + clazz.getName());
         }
-        return clazz.cast(instance().instanceObjectHelper.get(clazz));
+        return clazz.cast(instance().instanceHelper.get(clazz));
     }
 
     public static void stop() {
-        instance().instanceObjectHelper.clear();
+        instance().instanceHelper.clear();
     }
 }

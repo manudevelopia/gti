@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class InstanceObjectsHelper {
+public class InstanceHelper {
     private final Map<Class<?>, Object> instanceObjects = new ConcurrentSkipListMap<>(Comparator.comparing(Class::getName));
     private String packageBase;
 
