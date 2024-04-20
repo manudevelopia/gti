@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-public class InstanceHelper {
+class InstanceHelper {
     private final Map<Key, Object> instances = new ConcurrentSkipListMap<>(Comparator.comparing(Key::getName));
     private String packageBase;
 
-    public <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
+    <T> T buildInstance(Class<T> clazz, Set<Object> visitedClasses) {
         checkCircularDependency(clazz, visitedClasses);
         var constructor = getFirstConstructor(clazz);
         var parametersInstances = getConstructorParametersInstances(constructor, visitedClasses);
@@ -55,25 +55,25 @@ public class InstanceHelper {
         return contains(clazz) || clazz.getPackageName().startsWith(packageBase);
     }
 
-    public String getPackageBase() {
+    String getPackageBase() {
         return packageBase;
     }
 
-    public void setPackageBase(String packageBase) {
+    void setPackageBase(String packageBase) {
         this.packageBase = packageBase;
     }
 
-    public void addInstance(Object object) {
+    void addInstance(Object object) {
         Key key = new Key(object.getClass().getName(), object.getClass());
         instances.put(key, object);
     }
 
-    public <T> void addInstance(Class<T> clazz, Object instance) {
+    <T> void addInstance(Class<T> clazz, Object instance) {
         Key key = new Key(clazz.getName(), clazz);
         instances.put(key, instance);
     }
 
-    public void addInstance(String keyName, Object object) {
+    void addInstance(String keyName, Object object) {
         Key key = new Key(keyName, object.getClass());
         instances.put(key, object);
     }
