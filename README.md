@@ -12,12 +12,12 @@ easy alternative, so I decided to create a one with the minimal features that I 
 # How to Use it
 Add dependency to your Gradle build.gradle or Maven pom.xml
 ```
-plugins {
-    id 'info.developia.gradle.docker.slimjar' version '1.0.1'
+dependencies {
+    implementation 'info.developia.gti:gti:1.0-SNAPSHOT'
 }
 ```
 
-Add `Gti.startOn()` with the main application class. This will return the instance of the class.
+Add `Gti.startOn()` with the main application class. This will return the instance of the class, and you can run your method to start application.
 ```java
 var application = Gti.inject().startOn(Application.class);
 application.run();
